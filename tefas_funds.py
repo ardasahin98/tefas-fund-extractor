@@ -1,5 +1,6 @@
 import time
 import os
+import sys
 from datetime import datetime
 import tkinter as tk
 from tkinter import messagebox
@@ -52,11 +53,19 @@ def get_fund_input():
 
 fonds = get_fund_input()
 
-# ------------------ EXCEL SETUP ------------------
+# ------------------ DETERMINE SAVE LOCATION ------------------
+
+if getattr(sys, "frozen", False):
+    # Running as .exe
+    base_dir = os.path.dirname(sys.executable)
+else:
+    # Running as .py
+    base_dir = os.path.dirname(os.path.abspath(__file__))
 
 today = datetime.now().strftime("%Y-%m-%d")
-desktop = os.path.join(os.path.expanduser("~"), "Desktop")
-file_path = os.path.join(desktop, f"fund_values_{today}.xlsx")
+file_path = os.path.join(base_dir, f"fund_values_{today}.xlsx")
+
+# ------------------ EXCEL SETUP ------------------
 
 if os.path.exists(file_path):
     wb = openpyxl.load_workbook(file_path)
